@@ -11,3 +11,9 @@
 
 - datetime(n) 精确到微秒
 - java.util.Date 精确到毫秒
+
+### MyBatis 执行拦截器会对一个 SQL 重复执行，改 SQL 需做防重，或者在预编译拦截器中添加
+
+### MyBatis 拦截器改 SQL 加 traceId 会导致某些数据库 SQL 指纹不同
+- MySQL /*!99999
+- Oracle 无法解决

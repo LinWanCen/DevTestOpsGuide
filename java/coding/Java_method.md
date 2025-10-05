@@ -68,3 +68,14 @@ public protected private abstract default static final transient volatile synchr
 https://google.github.io/styleguide/javaguide.html#s4.8.7-modifiers
 
 https://github.com/google/styleguide/blob/gh-pages/javaguide.html
+
+
+### 静态工厂方法使用惯用名称
+
+来自《Effective Java 3》 第二章 第1条
+
+- from, valueOf 单参数
+- of 多参数
+- instance/getInstance
+- create/newInstance 每次都是新实例
+- getType/newType/type 创建的非本类

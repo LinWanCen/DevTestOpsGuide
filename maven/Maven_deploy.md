@@ -42,10 +42,14 @@
 </project>
 ```
 
+### 只用来打包的插件绑定周期不要太靠前
+
 
 ### 应在包中包含 Git 信息方便在没有 Git Tag 的时候找到对应版本
 
-打包Git信息官方参考：https://github.com/git-commit-id/git-commit-id-maven-plugin
+- 打包Git信息官方参考：https://github.com/git-commit-id/git-commit-id-maven-plugin
+  - 4.x.x 及以下才能支持 JDK 1.8
+- 8.0.0 以上只收集一次信息性能较好：https://github.com/git-commit-id/git-commit-id-maven-plugin/pull/700
 
 ```xml
 <project>
@@ -59,7 +63,7 @@
         <executions>
           <execution>
             <id>git-commit-id</id>
-            <phase>initialize</phase>
+            <phase>package</phase>
             <goals>
               <goal>revision</goal>
             </goals>

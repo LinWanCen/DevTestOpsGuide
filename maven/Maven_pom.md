@@ -1,6 +1,6 @@
 # Maven pom 基本配置
 
-### 中文团队下项目需添加名称标签 `<name>${project.artifactId} 简称1 简称2</name>`
+### 中文团队下项目可添加名称标签 `<name>${project.artifactId} 简称1 简称2</name>`
 
 有些工具会用 name 来当文件名，所以不能包含`\/:*?"<>|`
 

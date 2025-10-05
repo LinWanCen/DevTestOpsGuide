@@ -8,6 +8,8 @@
 
 ### 传输的包需校验 MD5 值检查是否损坏或被篡改
 
+### 只解压需要的文件而不是整个压缩包，减少 CPU 消耗
+
 ```shell
 # Windows
 certutil -hashfile 文件路径 md5

@@ -40,7 +40,7 @@ od -x UniqueValidator.class |awk 'NR==1'
 
 ### 【推荐】`JVM`参数配置打印堆内存不足打印内存快照，若设置输出文件夹需存在，便于解决 OOM
 堆文件 Dump .hprof(Heap Profile) 格式：java_pid*.hprof\
-可以用 JDK 自带的 jvisualvm.exe 查看
+可以用 JDK 自带的 jvisualvm.exe 查看或 MemoryAnalyzer 第三个 dominator_tree 查看占用大的持有堆栈
 ```
 -XX:+HeapDumpOnOutOfMemoryError
 -XX:HeapDumpPath=../logs

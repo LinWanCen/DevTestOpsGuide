@@ -14,6 +14,7 @@ Spring MVC 中可以统一设置：
 @RequestMapping(produces = "application/json;charset=UTF-8")
 ```
 
+
 ### 时间应返回时间戳数字或多浏览器兼容性的字符串
 
 根据阿里规范，不应使用 java.sql 的 Timestamp Date Time

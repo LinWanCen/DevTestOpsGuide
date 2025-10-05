@@ -9,6 +9,8 @@
 
 官方标准目录结构：http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html
 
+更新：官方标准目录结构已经删除了这个说明，请参考 maven-4.0.0.xsd 上的说明
+
 ```xml
 <project>
   <build>

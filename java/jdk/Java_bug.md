@@ -18,3 +18,6 @@
 ### 不需要正则替换时优先使用`replace()`(也是替换所有)
 
 `replaceAll()`和`split()`的参数是正则表达式
+
+### 不要使用`new byte[inputStream.available()]`来读文件，空文件会死循环
+`while ((len = inputStream.read(buffer)) != -1) {}`空文件会一直返回 0，导致死循环

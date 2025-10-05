@@ -37,6 +37,13 @@ info 级别下的输出应该是比较干净的，可以降级的都降级，不
 
 
 ### 不使用`System.out`、`System.err`、`printStackTrace`
+如果控制台日志被输出到 /dev/null 会找不到，如果输出到文件会无节制地占用空间
+
+没有时间戳难以分析性能，如果是工具调 jar 无法改可以在调用命令后
+```shell
+java -jar a.jar | awk '{print strftime("%Y-%m-%d %H:%M:%S"), $0)\}'
+```
+
 替换正则
 ```
 // 一般这种方式打印的都是为了排错，所以用 debug
@@ -63,3 +70,5 @@ thisClass: className()
 ### SQL 日志可以帮助查询导致数据变化的原因
 
 查询数据库记录更新时间对应的 update xxx 的日志排查问题
+
+### logback if 表达式里字符串要用`equals`而不是`==`

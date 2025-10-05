@@ -12,6 +12,16 @@
 比如日志，如果 log4j2 和 logback 都存在就会导致 slf4j 报 `Class path contains multiple SLF4J bindings.`
 
 
+### 记住常用的依赖分析命令
+dep依赖 end结束 enc编码 y是
+```shell
+dependency:tree
+dependency:analyze
+```
+
+### 使用`dependencyManagement`避免版本冲突，`import`前面比后面优先级高且只引入版本管理，比`parent`优先级高
+
+
 ### `maven-compiler-plugin`添加`jar`路径时必须添加`${project.basedir}`，否则在`Linux`和`Mac`下会找不到包
 
 3.1 前(JDK6)，注意这里是`compilerArguments`，后面有个`s`
