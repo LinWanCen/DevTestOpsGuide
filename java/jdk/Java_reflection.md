@@ -44,15 +44,16 @@ main 方法可以继承运行，不算重写（不能`@Override`）
 
 一些常量或类型可以用诸如`Modifier`、`ElementType`的定义
 
-### 不要使用`ClassLoader`获取类路径以免空指针异常
+### 不要在静态变量中无`try`获取类的根目录，以免不同环境的JDK实现空指针异常
 
 ```java
 class A { void fun() {
     Main.class.getResource(""); // 该类包路径 √
-    Main.class.getResource("/"); // 根路径 √
-    ClassLoader.getSystemResource("");// 类的根路径，classpath file 模式下为 null
+    Main.class.getResource("/META-INF"); // 根路径下存在的文件夹 √
+    Main.class.getResource("/"); // 根路径，IDEA 插件获取时 null
+    ClassLoader.getSystemResource("");// 类的根路径，classpath file 模式下为 null，IDEA 插件获取时 null
     ClassLoader.getSystemResource("/"); // null
-    Main.class.getClassLoader().getResource(""); // 根路径
+    Main.class.getClassLoader().getResource(""); // 根路径，IDEA 插件获取时 null
     Main.class.getClassLoader().getResource ("/"); // null
 }}
 ```

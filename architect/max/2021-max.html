@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线性规划图形表示</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f7fa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .color-box {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+        .vertex-list {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .vertex {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <canvas id="graph" width="500" height="500"></canvas>
+    <div class="legend">
+        <div class="legend-item">
+            <div class="color-box" style="background-color: #4CAF50;"></div>
+            <span>可行解区域</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box" style="background-color: #2196F3;"></div>
+            <span>约束线: x ≤ 4</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box" style="background-color: #FF9800;"></div>
+            <span>约束线: y ≤ 3</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box" style="background-color: #9C27B0;"></div>
+            <span>约束线: x+2y ≤ 8</span>
+        </div>
+        <div class="legend-item">
+            <div class="color-box" style="background-color: #F44336;"></div>
+            <span>目标函数: 2x+3y</span>
+        </div>
+    </div>
+    <div class="vertex-list">
+        <div class="vertex">顶点 (0,0): 目标函数值 = 0</div>
+        <div class="vertex">顶点 (0,3): 目标函数值 = 9</div>
+        <div class="vertex">顶点 (2,3): 目标函数值 = 13</div>
+        <div class="vertex">顶点 (4,2): 目标函数值 = 14</div>
+        <div class="vertex">顶点 (4,0): 目标函数值 = 8</div>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('graph');
+    const ctx = canvas.getContext('2d');
+
+    // 坐标系设置
+    const originX = 50;
+    const originY = 450;
+    const scale = 40;
+    const xMax = 8;
+    const yMax = 5;
+
+    // 绘制坐标系
+    function drawCoordinateSystem() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 绘制坐标轴
+        ctx.beginPath();
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(originX + xMax * scale, originY);
+        ctx.moveTo(originX, originY);
+        ctx.lineTo(originX, originY - yMax * scale);
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 绘制x轴刻度
+        for (let i = 0; i <= xMax; i++) {
+            ctx.beginPath();
+            ctx.moveTo(originX + i * scale, originY);
+            ctx.lineTo(originX + i * scale, originY + 5);
+            ctx.stroke();
+            ctx.fillText(i, originX + i * scale - 5, originY + 20);
+        }
+
+        // 绘制y轴刻度
+        for (let i = 0; i <= yMax; i++) {
+            ctx.beginPath();
+            ctx.moveTo(originX, originY - i * scale);
+            ctx.lineTo(originX - 5, originY - i * scale);
+            ctx.stroke();
+            ctx.fillText(i, originX - 20, originY - i * scale + 5);
+        }
+
+        // 标记坐标轴
+        ctx.fillText('x', originX + xMax * scale - 10, originY + 30);
+        ctx.fillText('y', originX - 30, originY - yMax * scale + 10);
+    }
+
+    // 绘制约束线
+    function drawConstraints() {
+        // 约束 x ≤ 4
+        ctx.beginPath();
+        ctx.moveTo(originX + 4 * scale, originY);
+        ctx.lineTo(originX + 4 * scale, originY - yMax * scale);
+        ctx.strokeStyle = '#2196F3';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 约束 y ≤ 3
+        ctx.beginPath();
+        ctx.moveTo(originX, originY - 3 * scale);
+        ctx.lineTo(originX + xMax * scale, originY - 3 * scale);
+        ctx.strokeStyle = '#FF9800';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 约束 x+2y ≤ 8
+        ctx.beginPath();
+        // 当x=0时，y=4
+        ctx.moveTo(originX, originY - 4 * scale);
+        // 当y=0时，x=8
+        ctx.lineTo(originX + 8 * scale, originY);
+        ctx.strokeStyle = '#9C27B0';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+
+    // 绘制可行解区域
+    function drawFeasibleRegion() {
+        // 可行解区域的顶点
+        const vertices = [
+            {x: 0, y: 0},
+            {x: 0, y: 3},
+            {x: 2, y: 3},
+            {x: 4, y: 2},
+            {x: 4, y: 0}
+        ];
+
+        ctx.beginPath();
+        ctx.moveTo(originX + vertices[0].x * scale, originY - vertices[0].y * scale);
+        for (let i = 1; i < vertices.length; i++) {
+            ctx.lineTo(originX + vertices[i].x * scale, originY - vertices[i].y * scale);
+        }
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(76, 175, 80, 0.3)';
+        ctx.fill();
+        ctx.strokeStyle = '#4CAF50';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // 标记顶点
+        vertices.forEach(vertex => {
+            ctx.beginPath();
+            ctx.arc(originX + vertex.x * scale, originY - vertex.y * scale, 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#F44336';
+            ctx.fill();
+            ctx.strokeStyle = '#B71C1C';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 标记顶点坐标
+            ctx.fillStyle = '#333';
+            ctx.fillText(`(${vertex.x},${vertex.y})`,
+                originX + vertex.x * scale + 8,
+                originY - vertex.y * scale - 8);
+        });
+    }
+
+    // 绘制目标函数线
+    function drawObjectiveFunction() {
+        // 目标函数 2x+3y
+        // 绘制目标函数线 (这里绘制通过最优解(4,2)的线)
+        const maxValue = 14; // 最大值
+        // 当y=0时，x=7
+        // 当x=0时，y≈4.67
+        ctx.beginPath();
+        ctx.moveTo(originX, originY - (maxValue/3) * scale);
+        ctx.lineTo(originX + (maxValue/2) * scale, originY);
+        ctx.strokeStyle = '#F44336';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    // 初始化
+    function init() {
+        drawCoordinateSystem();
+        drawConstraints();
+        drawFeasibleRegion();
+        drawObjectiveFunction();
+    }
+
+    init();
+</script>
+</body>
+</html>
