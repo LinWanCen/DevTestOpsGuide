@@ -1,5 +1,7 @@
 # 生产问题（线上故障）处理排查思路
-未完成
+
+- 缓慢/卡住：[jstack](java/java_ops/Java_ops.md)、[SQL](db/SQL_pref.md)、日志断流
+
 
 ## 相关文章
 

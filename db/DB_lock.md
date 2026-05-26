@@ -1,6 +1,21 @@
 # 数据库锁排查
 
-
+2026上案例5：
+- 悲观锁
+  - 优点：数据强一致性，写多读少
+  - 缺点：并发性能差，可能死锁，锁竞争变慢
+  - 共享锁：允许其他事物读，但阻止修改
+    lock in share mode
+  - 排他锁：阻止其他事务读取和修改（Java 叫独占锁）
+    for update
+- 乐观锁
+  - 优点：并发性能好（无阻塞），读多写少，冲突率<20%
+  - 缺点：冲突处理成本高，用业务字段会有ABA问题
+  - 应用层：
+    - 表中增加版本号字段，作为条件并更新
+      and version=
+    - 根据时间戳先后判断
+  - DBMS
 
 ## MySQL
 ```MySQL
@@ -12,6 +27,12 @@ show OPEN TABLES where In_use > 0;
 
 -- 查进程
 show processlist;
+
+-- 查找锁线程
+select * from information_schema.`PROCESSLIST` where COMMAND != 'sleep' and info is not null;
+
+-- 查看状态
+show table status like '表名';
 ```
 
 ## Oracle
